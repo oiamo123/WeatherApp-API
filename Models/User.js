@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const moment = require("moment");
 
 // prettier-ignore
 const User = mongoose.Schema(
@@ -15,10 +14,9 @@ const User = mongoose.Schema(
       type: [{ date: Date, location: { city: String, country: String } }],
       default: []
     },
-    timezoneOffset: { type: Number, required: true },
+    timezone: { type: String, required: true },
     notificationTime: { type: Number, default: 9 },
     weatherConditions: { type: [String], default: [] },
-    accessToken: { type: String, default: "" },
     refreshToken: { type: String, default: "" },
     verificationCode: {
       code: { type: String, default: "" },

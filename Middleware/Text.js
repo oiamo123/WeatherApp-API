@@ -1,20 +1,19 @@
 const dotenv = require("dotenv").config();
 const argon2 = require("argon2");
 const User = require("../Models/User.js");
-const verify = require("./Verify.js");
 
 const twilio = require("twilio")(
   process.env.ACCOUNT_SID,
   process.env.TWILIO_AUTH
 );
 
-const sendVerificationText = async function (phoneNumber) {
+const sendVerificationText = async function (req, res, next) {
   try {
     const verificationCode = Math.floor(
       Math.random() * (999999 - 100000 + 1) + 100000
     );
 
-    const user = await User.findOne({ phoneNumber: phoneNumber });
+    const user = await User.findOne({ phoneNumber: req.body.phoneNumber });
 
     if (!user) {
       throw new Error("User not found");
@@ -32,11 +31,11 @@ const sendVerificationText = async function (phoneNumber) {
       `Your weathalert verification code is: ${verificationCode}`
     );
 
-    console.log("Message successfully sent");
-
-    verify(phoneNumber, verificationCode);
+    next();
   } catch (err) {
-    console.log(err);
+    res
+      .status(500)
+      .json({ message: "Something went wrong, please try again later" });
   }
 };
 
